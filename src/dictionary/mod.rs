@@ -1,15 +1,15 @@
-use crate::cache::CacheManager;
-use crate::trie::PrefixTrie;
+mod cache;
+mod models;
+mod trie;
+
+pub use cache::CacheManager;
+pub use models::DictEntry;
+pub use trie::PrefixTrie;
+
 use anyhow::Result;
 use std::path::Path;
 
 const MAX_RESULTS: usize = 50;
-
-#[derive(Debug, Clone)]
-pub struct DictEntry {
-    pub headword: String,
-    pub definition: String,
-}
 
 pub struct Dictionary {
     index: PrefixTrie,

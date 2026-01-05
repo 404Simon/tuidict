@@ -1,4 +1,4 @@
-use crate::trie::PrefixTrie;
+use super::trie::PrefixTrie;
 use anyhow::{Context, Result};
 use std::fs::{self, File};
 use std::io::{BufRead, BufReader, Read, Write};
