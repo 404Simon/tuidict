@@ -79,18 +79,6 @@ jobs:
         cp README.md LICENSE "$BUILD_NAME/"
         cp "target/${{ matrix.target }}/release/tuidict.exe" "$BUILD_NAME/"
 
-    - name: Run smoke test (Unix)
-      if: matrix.os != 'windows-latest'
-      shell: bash
-      run: |
-        "$BUILD_NAME/tuidict" --version || echo "Smoke test skipped (app may require interactive terminal)"
-
-    - name: Run smoke test (Windows)
-      if: matrix.os == 'windows-latest'
-      shell: bash
-      run: |
-        "$BUILD_NAME/tuidict.exe" --version || echo "Smoke test skipped (app may require interactive terminal)"
-
     - name: Create tarball (Unix)
       if: matrix.os != 'windows-latest'
       shell: bash
