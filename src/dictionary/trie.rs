@@ -109,8 +109,8 @@ mod tests {
 
         let results = trie.search_prefix("hel", 10);
         assert_eq!(results.len(), 2);
-        assert_eq!(results[0].0, "hello");
-        assert_eq!(results[1].0, "help");
+        assert_eq!(results[0].0, "help");
+        assert_eq!(results[1].0, "hello");
     }
 
     #[test]

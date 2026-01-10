@@ -163,20 +163,18 @@ impl AppState {
             // Load or unload dictionary
             if was_active {
                 self.loaded_dictionaries.remove(&dict_id);
-            } else {
-                if let Some(dict_config) = self.config.dictionaries.iter().find(|d| d.id == dict_id)
-                {
-                    match load_dictionary(dict_config) {
-                        Ok(dict) => {
-                            self.loaded_dictionaries.insert(dict_id.clone(), dict);
-                        }
-                        Err(e) => {
-                            self.download_status =
-                                Some(format!("Failed to load dictionary: {}", e));
-                            // Deactivate it again
-                            self.config.toggle_dictionary(&dict_id);
-                            let _ = self.config.save();
-                        }
+            } else if let Some(dict_config) =
+                self.config.dictionaries.iter().find(|d| d.id == dict_id)
+            {
+                match load_dictionary(dict_config) {
+                    Ok(dict) => {
+                        self.loaded_dictionaries.insert(dict_id.clone(), dict);
+                    }
+                    Err(e) => {
+                        self.download_status = Some(format!("Failed to load dictionary: {}", e));
+                        // Deactivate it again
+                        self.config.toggle_dictionary(&dict_id);
+                        let _ = self.config.save();
                     }
                 }
             }
