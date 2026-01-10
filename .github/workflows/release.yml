@@ -1,0 +1,38 @@
+name: release
+on:
+  release:
+    types: [created]
+
+jobs:
+  build-artifacts:
+    permissions:
+      contents: write
+    uses: ./.github/workflows/build-artifacts.yml
+
+  upload-release-assets:
+    needs: ['build-artifacts']
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download all workflow artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Display structure of downloaded files
+        run: ls -R artifacts
+
+      - name: Upload release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          cd artifacts
+          for dir in */; do
+            archive=$(find "$dir" -type f \( -name "*.tar.gz" -o -name "*.zip" \) | head -n 1)
+            if [ -n "$archive" ]; then
+              echo "Uploading $archive to release ${{ github.event.release.tag_name }}"
+              gh release upload "${{ github.event.release.tag_name }}" "$archive" --clobber
+            fi
+          done
