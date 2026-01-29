@@ -39,17 +39,11 @@ jobs:
           git push
           git push origin "v$CLEAN_VERSION"
 
-  create-release:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ secrets.GH_PAT }}
         run: |
-          gh release create ${{ github.ref_name }} \
+          gh release create "${{ inputs.version }}" \
             --draft=false \
             --prerelease=false \
             --generate-notes
