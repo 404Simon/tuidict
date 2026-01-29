@@ -1,7 +1,13 @@
 [package]
 name = "tuidict"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
+description = "TUI dictionary with support for multiple language pairs from FreeDict."
+license = "MIT"
+repository = "https://github.com/404Simon/tuidict"
+readme = "README.md"
+keywords = ["tui", "dictionary", "freedict"]
+categories = ["command-line-utilities"]
 
 [dependencies]
 ratatui = "0.26"
@@ -21,3 +27,7 @@ reqwest = { version = "0.11", features = ["blocking", "json", "rustls-tls", "rus
 
 [target.'cfg(not(target_env = "musl"))'.dependencies]
 reqwest = { version = "0.11", features = ["blocking", "json", "default-tls"], default-features = false }
+
+[[bin]]
+name = "tuidict"
+path = "src/main.rs"

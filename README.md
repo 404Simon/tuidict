@@ -12,6 +12,10 @@ TUI dictionary with support for multiple language pairs from FreeDict.
 
 ## Quick Start
 
+```bash
+cargo install tuidict
+```
+
 1. Launch the application
 2. Press `3` to go to the Download page
 3. Browse available dictionaries and press `Enter` to download
