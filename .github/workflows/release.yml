@@ -1,28 +1,10 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - 'v*'
+  release:
 
 jobs:
-  create-release:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-      - name: Create GitHub Release
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh release create ${{ github.ref_name }} \
-            --draft=false \
-            --prerelease=false \
-            --generate-notes
-
   build-artifacts:
-    needs: [create-release]
     permissions:
       contents: write
     uses: ./.github/workflows/build-artifacts.yml
@@ -33,6 +15,7 @@ jobs:
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           path: artifacts
