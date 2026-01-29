@@ -1,0 +1,40 @@
+name: Create Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Target Version (e.g. v0.1.2)'
+        required: true
+        type: string
+
+jobs:
+  bump-and-tag:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Install cargo-edit
+        run: cargo install cargo-edit
+
+      - name: Bump Version
+        run: |
+          CLEAN_VERSION=$(echo "${{ inputs.version }}" | sed 's/^v//')
+          cargo set-version "$CLEAN_VERSION"
+          
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add Cargo.toml Cargo.lock
+          git commit -m "chore: release v$CLEAN_VERSION"
+          
+          git tag "v$CLEAN_VERSION"
+          
+          git push
+          git push origin "v$CLEAN_VERSION"
