@@ -1,6 +1,6 @@
 [package]
 name = "tuidict"
-version = "0.1.4"
+version = "0.1.5"
 edition = "2021"
 description = "TUI dictionary with support for multiple language pairs from FreeDict."
 license = "MIT"
