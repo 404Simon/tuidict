@@ -17,7 +17,7 @@ pub fn render(f: &mut Frame, state: &AppState) {
             Constraint::Length(3),
             Constraint::Length(2),
         ])
-        .split(f.size());
+        .split(f.area());
 
     render_download_search(f, state, chunks[0]);
     render_download_list(f, state, chunks[1]);

@@ -12,7 +12,7 @@ pub fn render(f: &mut Frame, state: &AppState) {
     let chunks = Layout::default()
         .direction(Direction::Vertical)
         .constraints([Constraint::Min(1), Constraint::Length(3)])
-        .split(f.size());
+        .split(f.area());
 
     render_management_list(f, state, chunks[0]);
     render_footer(
