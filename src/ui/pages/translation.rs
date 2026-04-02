@@ -16,7 +16,7 @@ pub fn render(f: &mut Frame, state: &AppState) {
             Constraint::Min(1),
             Constraint::Length(2),
         ])
-        .split(f.size());
+        .split(f.area());
 
     render_search_bar(f, state, chunks[0]);
     render_main_area(f, state, chunks[1]);
