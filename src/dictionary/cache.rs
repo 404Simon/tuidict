@@ -1,7 +1,7 @@
 use super::trie::PrefixTrie;
 use anyhow::{Context, Result};
 use std::fs::{self, File};
-use std::io::{BufRead, BufReader, Read, Write};
+use std::io::{BufRead, BufReader, BufWriter, Read, Write};
 use std::path::Path;
 
 /// stores trie structure + dictionary
@@ -100,21 +100,57 @@ impl CacheManager {
     }
 
     fn save_trie_to_cache(trie: &PrefixTrie, cache_path: &Path) -> Result<()> {
-        let encoded = bincode::serialize(trie).context("Failed to serialize trie")?;
-        let mut file = File::create(cache_path)
+        let file = File::create(cache_path)
             .with_context(|| format!("Failed to create cache file: {:?}", cache_path))?;
-        file.write_all(&encoded)
-            .context("Failed to write cache file")?;
+        let mut writer = BufWriter::new(file);
+
+        // format: count (8 bytes) + entries
+        // each entry: key_len (8 bytes) + key + offset (8 bytes) + length (8 bytes)
+        let entries: Vec<(Vec<u8>, (u64, u64))> = trie.to_entries();
+
+        writer.write_all(&(entries.len() as u64).to_le_bytes())?;
+
+        for (key, (offset, length)) in entries {
+            writer.write_all(&(key.len() as u64).to_le_bytes())?;
+            writer.write_all(&key)?;
+            writer.write_all(&offset.to_le_bytes())?;
+            writer.write_all(&length.to_le_bytes())?;
+        }
+
+        writer.flush()?;
         Ok(())
     }
 
     fn load_trie_from_cache(cache_path: &Path) -> Result<PrefixTrie> {
-        let mut file = File::open(cache_path)
+        let file = File::open(cache_path)
             .with_context(|| format!("Failed to open cache file: {:?}", cache_path))?;
-        let mut buffer = Vec::new();
-        file.read_to_end(&mut buffer)
-            .context("Failed to read cache file")?;
-        let trie = bincode::deserialize(&buffer).context("Failed to deserialize trie")?;
+        let mut reader = BufReader::new(file);
+
+        let mut count_buf = [0u8; 8];
+        reader.read_exact(&mut count_buf)?;
+        let count = u64::from_le_bytes(count_buf) as usize;
+
+        let mut trie = PrefixTrie::new();
+
+        for _ in 0..count {
+            let mut len_buf = [0u8; 8];
+            reader.read_exact(&mut len_buf)?;
+            let key_len = u64::from_le_bytes(len_buf) as usize;
+
+            let mut key = vec![0u8; key_len];
+            reader.read_exact(&mut key)?;
+
+            let mut offset_buf = [0u8; 8];
+            reader.read_exact(&mut offset_buf)?;
+            let offset = u64::from_le_bytes(offset_buf);
+
+            let mut length_buf = [0u8; 8];
+            reader.read_exact(&mut length_buf)?;
+            let length = u64::from_le_bytes(length_buf);
+
+            trie.insert_bytes(key, offset, length);
+        }
+
         Ok(trie)
     }
 

@@ -41,6 +41,14 @@ impl PrefixTrie {
         self.trie.insert(key, (offset, length));
     }
 
+    pub fn insert_bytes(&mut self, key: Vec<u8>, offset: u64, length: u64) {
+        self.trie.insert(key, (offset, length));
+    }
+
+    pub fn to_entries(&self) -> Vec<(Vec<u8>, (u64, u64))> {
+        self.trie.iter().map(|(k, v)| (k.to_vec(), *v)).collect()
+    }
+
     pub fn search_prefix(&self, prefix: &str, limit: usize) -> Vec<(String, u64, u64)> {
         if prefix.is_empty() {
             return Vec::new();
