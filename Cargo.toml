@@ -10,7 +10,7 @@ keywords = ["tui", "dictionary", "freedict"]
 categories = ["command-line-utilities"]
 
 [dependencies]
-ratatui = "0.26"
+ratatui = "0.30"
 crossterm = "0.29"
 anyhow = "1.0"
 flate2 = "1.0"
