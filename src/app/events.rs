@@ -60,9 +60,7 @@ impl AppState {
             {
                 self.management_selected += 1;
             }
-            KeyCode::Up | KeyCode::Char('k')
-                if self.management_selected > 0 =>
-            {
+            KeyCode::Up | KeyCode::Char('k') if self.management_selected > 0 => {
                 self.management_selected -= 1;
             }
             KeyCode::Enter | KeyCode::Char(' ') => {
@@ -89,9 +87,7 @@ impl AppState {
                         }
                     }
                 }
-                KeyCode::Char('k') | KeyCode::Up
-                    if self.download_selected > 0 =>
-                {
+                KeyCode::Char('k') | KeyCode::Up if self.download_selected > 0 => {
                     self.download_selected -= 1;
                 }
                 KeyCode::Char('/') => {
@@ -120,8 +116,9 @@ impl AppState {
                         }
                     }
                 }
-                KeyCode::Char('p') if key.modifiers.contains(KeyModifiers::CONTROL)
-                    && self.download_selected > 0 =>
+                KeyCode::Char('p')
+                    if key.modifiers.contains(KeyModifiers::CONTROL)
+                        && self.download_selected > 0 =>
                 {
                     self.download_selected -= 1;
                 }
@@ -133,9 +130,7 @@ impl AppState {
                         }
                     }
                 }
-                KeyCode::Up
-                    if self.download_selected > 0 =>
-                {
+                KeyCode::Up if self.download_selected > 0 => {
                     self.download_selected -= 1;
                 }
                 KeyCode::Char(c) if !c.is_numeric() || c == '0' => {
