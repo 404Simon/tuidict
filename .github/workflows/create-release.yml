@@ -20,8 +20,11 @@ jobs:
 
       - uses: dtolnay/rust-toolchain@stable
 
+      - name: Install cargo-binstall
+        uses: cargo-bins/cargo-binstall@main
+
       - name: Install cargo-edit
-        run: cargo install cargo-edit
+        run: cargo binstall cargo-edit --no-confirm --locked
 
       - name: Bump Version
         run: |

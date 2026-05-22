@@ -46,18 +46,10 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y musl-tools
 
-    - name: Cache cargo registry and target
-      uses: actions/cache@v5
+    - name: Setup Rust cache
+      uses: Swatinem/rust-cache@v2
       with:
-        path: |
-            ~/.cargo/bin
-            ~/.cargo/registry/index
-            ~/.cargo/registry/cache
-            ~/.cargo/git/db
-            target
-        key: ${{ runner.os }}-${{ matrix.target }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-${{ matrix.target }}-cargo-
+        cache-on-failure: true
 
     - name: Build release binary
       run: cargo build --verbose --release --locked --target ${{ matrix.target }}

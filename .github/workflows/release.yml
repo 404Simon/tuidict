@@ -41,6 +41,11 @@ jobs:
       
       - uses: dtolnay/rust-toolchain@stable
       
+      - name: Setup Rust cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          cache-on-failure: true
+
       - name: Publish to Crates.io
         env:
           CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
