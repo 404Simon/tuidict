@@ -55,15 +55,15 @@ impl AppState {
         match key.code {
             KeyCode::Char('q') => self.exit = true,
             KeyCode::Esc => self.page = Page::Translation,
-            KeyCode::Down | KeyCode::Char('j') => {
-                if self.management_selected < self.config.dictionaries.len().saturating_sub(1) {
-                    self.management_selected += 1;
-                }
+            KeyCode::Down | KeyCode::Char('j')
+                if self.management_selected < self.config.dictionaries.len().saturating_sub(1) =>
+            {
+                self.management_selected += 1;
             }
-            KeyCode::Up | KeyCode::Char('k') => {
-                if self.management_selected > 0 {
-                    self.management_selected -= 1;
-                }
+            KeyCode::Up | KeyCode::Char('k')
+                if self.management_selected > 0 =>
+            {
+                self.management_selected -= 1;
             }
             KeyCode::Enter | KeyCode::Char(' ') => {
                 self.toggle_selected_dictionary()?;
@@ -89,10 +89,10 @@ impl AppState {
                         }
                     }
                 }
-                KeyCode::Char('k') | KeyCode::Up => {
-                    if self.download_selected > 0 {
-                        self.download_selected -= 1;
-                    }
+                KeyCode::Char('k') | KeyCode::Up
+                    if self.download_selected > 0 =>
+                {
+                    self.download_selected -= 1;
                 }
                 KeyCode::Char('/') => {
                     self.download_filter.clear();
@@ -120,10 +120,10 @@ impl AppState {
                         }
                     }
                 }
-                KeyCode::Char('p') if key.modifiers.contains(KeyModifiers::CONTROL) => {
-                    if self.download_selected > 0 {
-                        self.download_selected -= 1;
-                    }
+                KeyCode::Char('p') if key.modifiers.contains(KeyModifiers::CONTROL)
+                    && self.download_selected > 0 =>
+                {
+                    self.download_selected -= 1;
                 }
                 KeyCode::Down => {
                     if let Some(dicts) = &self.available_dicts {
@@ -133,10 +133,10 @@ impl AppState {
                         }
                     }
                 }
-                KeyCode::Up => {
-                    if self.download_selected > 0 {
-                        self.download_selected -= 1;
-                    }
+                KeyCode::Up
+                    if self.download_selected > 0 =>
+                {
+                    self.download_selected -= 1;
                 }
                 KeyCode::Char(c) if !c.is_numeric() || c == '0' => {
                     self.download_filter.push(c);
